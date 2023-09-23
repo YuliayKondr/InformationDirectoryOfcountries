@@ -1,17 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using InformationDirectoryOfСountries.ContriesApplication;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Windows;
 
 namespace InformationDirectoryOfСountries
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        private readonly IHost _host;
+
+        public App()
+        {
+            HostApplicationBuilder builder = Host.CreateApplicationBuilder();
+            builder.Configuration.AddJsonFile("appsettings.json");
+            builder.Services.ContriesHostConfiguration();
+
+            _host = builder.Build();
+        }        
+
+        private async void Application_Startup(object sender, StartupEventArgs e)
+        {
+            await _host.StartAsync();
+            MainWindow mainWindow = _host.Services.GetService<MainWindow>();
+            mainWindow!.Show();
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            _host.Dispose();
+        }
     }
 }

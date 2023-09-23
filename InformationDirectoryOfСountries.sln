@@ -3,7 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformationDirectoryOfСountries", "InformationDirectoryOfСountries\InformationDirectoryOfСountries.csproj", "{6AB8B0A7-B1A5-4241-9A46-CECBCC63C14D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InformationDirectoryOfСountries", "InformationDirectoryOfСountries\InformationDirectoryOfСountries.csproj", "{6AB8B0A7-B1A5-4241-9A46-CECBCC63C14D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContriesDatabase", "ContriesDatabase\ContriesDatabase.csproj", "{6A2DBE44-B073-4683-AA17-2580F631C162}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{B164FEA8-D03A-4105-903E-19BA03096639}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTCountriesClient", "RESTCountriesClient\RESTCountriesClient.csproj", "{AC52641D-C6EE-45AD-A764-2A0E98FDF66A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +24,14 @@ Global
 		{6AB8B0A7-B1A5-4241-9A46-CECBCC63C14D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AB8B0A7-B1A5-4241-9A46-CECBCC63C14D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AB8B0A7-B1A5-4241-9A46-CECBCC63C14D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A2DBE44-B073-4683-AA17-2580F631C162}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A2DBE44-B073-4683-AA17-2580F631C162}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A2DBE44-B073-4683-AA17-2580F631C162}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A2DBE44-B073-4683-AA17-2580F631C162}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC52641D-C6EE-45AD-A764-2A0E98FDF66A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC52641D-C6EE-45AD-A764-2A0E98FDF66A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC52641D-C6EE-45AD-A764-2A0E98FDF66A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC52641D-C6EE-45AD-A764-2A0E98FDF66A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
