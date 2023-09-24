@@ -2,7 +2,7 @@
 
 namespace RESTCountriesClient
 {
-    public sealed class ContriesClientOptions
+    public sealed class CountriesClientOptions
     {
         [Url]
         [Required]

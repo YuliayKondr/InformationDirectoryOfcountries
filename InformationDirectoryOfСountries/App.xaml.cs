@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RESTCountriesClient;
 using System.Windows;
 
 namespace InformationDirectoryOfСountries
@@ -15,6 +16,7 @@ namespace InformationDirectoryOfСountries
             HostApplicationBuilder builder = Host.CreateApplicationBuilder();
             builder.Configuration.AddJsonFile("appsettings.json");
             builder.Services.ContriesHostConfiguration();
+            builder.Services.AddCountriesClient("CountriesClient");
 
             _host = builder.Build();
         }        

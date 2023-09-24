@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 using ContriesDatabase;
+using InformationDirectoryOfСountries.Arhitecture;
+using InformationDirectoryOfСountries.Models;
 
 
 namespace InformationDirectoryOfСountries.ContriesApplication
@@ -15,12 +17,8 @@ namespace InformationDirectoryOfСountries.ContriesApplication
     {
         public static IServiceCollection ContriesHostConfiguration(this IServiceCollection services)
         {
-            
             services.AddAutoMapper(typeof(IClientAssemblyMarker).Assembly);
-
-            services.AddSingleton<MainWindow>();
-
-
+            services.NavigationDI();
             return services;
         }
 
@@ -32,6 +30,24 @@ namespace InformationDirectoryOfСountries.ContriesApplication
             builder.Services.AddSingleton(typeof(IRepository<>), typeof(EfCoreRepository<>));
 
             return builder;
+        }
+
+        private static IServiceCollection NavigationDI(this IServiceCollection services)
+        {
+            services.AddSingleton<INavigationService, NavigationService>(
+                x =>
+                {
+                    var navigationService = new NavigationService(x);
+                    navigationService.Configure(nameof(MainWindow), typeof(MainWindow));
+
+                    return navigationService;
+                });
+
+            services.AddScoped<MainWindowModel>();
+
+
+            services.AddTransient(sp => new MainWindow() { DataContext = sp.GetRequiredService<MainWindowModel>() });
+            return services;
         }
     }
 }

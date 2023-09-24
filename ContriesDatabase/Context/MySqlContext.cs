@@ -1,4 +1,4 @@
-﻿//using DatabaseModel.Models;
+﻿using ContriesDatabase.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContriesDatabase.Context
@@ -9,6 +9,8 @@ namespace ContriesDatabase.Context
             : base(options)
         {
         }
+
+        public virtual DbSet<Country> Countries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
