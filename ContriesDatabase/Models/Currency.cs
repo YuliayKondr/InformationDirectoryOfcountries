@@ -1,15 +1,16 @@
 ﻿namespace ContriesDatabase.Models;
 
-public class Language
+public class Currency
 {
-    public Language(string name, string smallName, Country country)
+    public Currency(string name, string smallName, string symbol, Country country)
     {
+        Country = country;
         Name = name;
         SmallName = smallName;
-        Country = country;
+        Symbol = symbol;
     }
 
-    public Language()
+    public Currency()
     {
     }
 
@@ -20,6 +21,8 @@ public class Language
     public string Name { get; protected set; }
 
     public string SmallName { get; protected set; }
+
+    public string Symbol { get; protected set; }
 
     public virtual Country Country { get; protected set; }
 }

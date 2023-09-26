@@ -1,27 +1,23 @@
-﻿using Microsoft.Extensions.Logging;
-using RESTCountriesClient.Items;
+﻿using RESTCountriesClient.Items;
 using RestEase;
 
 namespace RESTCountriesClient
 {
     public sealed class CountriesClient : ICountriesClient
     {
-        private readonly ILogger _logger;
         private readonly ICountriesApi _api;
 
         public CountriesClient(
-            HttpClient httpClient,
-            ILogger<CountriesClient> logger)
+            HttpClient httpClient)
         {
             _api = CreateContriesApi(httpClient);
-            _logger = logger;            
         }
 
         public async Task<IReadOnlyCollection<CountryDto>> GetCounriesAsync()
         {
             Response<CountryDto[]> response = await _api.GetContriesAsync();
 
-            if (response != null && response.ResponseMessage.IsSuccessStatusCode)
+            if (response.ResponseMessage.IsSuccessStatusCode)
             {
                 CountryDto[] countries = response.GetContent();
 

@@ -5,20 +5,20 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ContriesDatabase.DatabaseModel;
 
-public class LanguageMap : EntityMapBase<Language>
+public class CurrencyMap : EntityMapBase<Currency>
 {
-    public LanguageMap()
-        : base("languages")
+    public CurrencyMap() : base("currencies")
     {
     }
 
-    protected override void ConfigureMap(EntityTypeBuilder<Language> b)
+    protected override void ConfigureMap(EntityTypeBuilder<Currency> b)
     {
         b.HasKey(x => x.Id);
         b.Property(x => x.Id).HasColumnName("id");
         b.Property(x => x.CountryId).HasColumnName("id_country");
         b.Property(x => x.Name).HasColumnName("name");
         b.Property(x => x.SmallName).HasColumnName("small_name");
-        b.HasOne(x => x.Country).WithMany(x => x.Languages).HasForeignKey(x => x.CountryId);
+        b.Property(x => x.Symbol).HasColumnName("symbol");
+        b.HasOne(x => x.Country).WithMany(x => x.Currencies).HasForeignKey(x => x.CountryId);
     }
 }

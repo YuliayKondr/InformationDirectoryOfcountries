@@ -2,9 +2,9 @@
 
 public class Map
 {
-    public Map(int countryId, int mapTypeId, string url)
+    public Map(int mapTypeId, string url, Country country)
     {
-        CountryId = countryId;
+        Country = country;
         MapTypeId = mapTypeId;
         Url = url;
     }

@@ -1,9 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RESTCountriesClient.Items
 {
@@ -25,9 +20,9 @@ namespace RESTCountriesClient.Items
         public string[] Capital { get; set; }
 
         [JsonProperty("languages")]
-        public Dictionary<string, string> Language { get; set; }
+        public Dictionary<string, string> Languages { get; set; }
 
-        [JsonProperty("translations")]
-        public Dictionary<string, string> Translations { get; set; }
+        [JsonProperty("maps")]
+        public Dictionary<string, string> Maps { get; set; }
     }
 }

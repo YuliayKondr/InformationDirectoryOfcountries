@@ -18,7 +18,7 @@ public sealed class CountriesClientTest
             x.DefaultTimeoutSeconds = 60;
         });
 
-        serviceCollection.AddCountriesClient("");
+        serviceCollection.AddCountriesClient();
         var serviceProvider = serviceCollection.AddLogging().BuildServiceProvider();
 
         using IServiceScope scope = serviceProvider.CreateScope();

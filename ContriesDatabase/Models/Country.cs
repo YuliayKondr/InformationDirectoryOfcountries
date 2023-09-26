@@ -30,4 +30,24 @@ public class Country
     public virtual ICollection<Language> Languages { get; protected set; }
 
     public virtual ICollection<Map> Maps { get; protected set; }
+
+    public virtual ICollection<Currency> Currencies { get; protected set; }
+
+    public void SetCollections(Language[] languages, Map[] maps, Currency[] currencies)
+    {
+        if (languages?.Any() == true)
+        {
+            Languages = languages;
+        }
+
+        if (maps?.Any() == true)
+        {
+            Maps = maps;
+        }
+
+        if (currencies?.Any() == true)
+        {
+            Currencies = currencies;
+        }
+    }
 }

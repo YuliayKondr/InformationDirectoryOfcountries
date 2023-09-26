@@ -4,9 +4,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InformationDirectoryOfСountries"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Країни світу" Height="450" Width="800">
+    <Window.Resources>
+    <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="../Styles/MainStyle.xaml"/>
+        </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadCountriesCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
+    <Grid>
+        <DataGrid x:Name="CountriesDataGrid"
+                  ItemsSource="{Binding Countries, Mode=OneWay}"
+                  AutoGenerateColumns="False"
+                  Style="{StaticResource DataGridMain}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Им'я" Binding="{Binding Path=Name, Mode=OneWay}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Им'я (укр.)" Binding="{Binding Path=NameUa, Mode=OneWay}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Сталиця" Binding="{Binding Path=Capital, Mode=OneWay}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Мова(перша)" Binding="{Binding Path=FirstLanguage, Mode=OneWay}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Ccn3" Binding="{Binding Path=Ccn3,Mode=OneWay}" Width="80" IsReadOnly="True"/>
+                <DataGridTemplateColumn Header="Прапор" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image MaxHeight="25" Stretch="Uniform" Source="{Binding Flag, Mode=OneWay}"></Image>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

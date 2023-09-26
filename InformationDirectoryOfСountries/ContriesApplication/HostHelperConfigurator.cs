@@ -45,7 +45,6 @@ namespace InformationDirectoryOfСountries.ContriesApplication
 
             services.AddScoped<MainWindowModel>();
 
-
             services.AddTransient(sp => new MainWindow() { DataContext = sp.GetRequiredService<MainWindowModel>() });
             return services;
         }
