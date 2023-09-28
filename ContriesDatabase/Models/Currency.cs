@@ -25,4 +25,9 @@ public class Currency
     public string Symbol { get; protected set; }
 
     public virtual Country Country { get; protected set; }
+
+    public override string ToString()
+    {
+        return $"{Name} ({Symbol})";
+    }
 }

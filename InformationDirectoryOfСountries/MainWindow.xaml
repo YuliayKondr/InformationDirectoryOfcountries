@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InformationDirectoryOfСountries"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="Країни світу" Height="450" Width="800">
@@ -21,8 +22,24 @@
     </i:Interaction.Triggers>
 
     <Grid>
-        <DataGrid x:Name="CountriesDataGrid"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" Style="{StaticResource TextBoxSearchStyle}"
+                 Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="KeyUp">
+                    <i:InvokeCommandAction Command="{Binding SearchCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </TextBox>
+        <DataGrid Grid.Row="1"
+                  x:Name="CountriesDataGrid"
+                  Margin="10 0 10 0"
                   ItemsSource="{Binding Countries, Mode=OneWay}"
+                  SelectedItem="{Binding Country, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   AutoGenerateColumns="False"
                   Style="{StaticResource DataGridMain}">
             <DataGrid.Columns>
@@ -30,6 +47,7 @@
                 <DataGridTextColumn Header="Им'я (укр.)" Binding="{Binding Path=NameUa, Mode=OneWay}" Width="150" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Сталиця" Binding="{Binding Path=Capital, Mode=OneWay}" Width="150" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Мова(перша)" Binding="{Binding Path=FirstLanguage, Mode=OneWay}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Валюта" Binding="{Binding Path=Currency, Mode=OneWay}" Width="150" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Ccn3" Binding="{Binding Path=Ccn3,Mode=OneWay}" Width="80" IsReadOnly="True"/>
                 <DataGridTemplateColumn Header="Прапор" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
@@ -38,7 +56,33 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="GoogleMap">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding DataContext.ShowMapCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
+                                <Image MaxHeight="20" Stretch="Uniform" Source="../Images/google_map_satellite.png"></Image>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="OpenStreetMaps">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding DataContext.ShowMapCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
+                                <Image MaxHeight="20" Stretch="Uniform" Source="../Images/google_map_satellite.png"></Image>
+                            </Button>
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <Button Grid.Row="2"
+                Content="Подивитися"
+                Margin="5"
+                Height="35"
+                VerticalAlignment="Bottom"
+                Command="{Binding ShowInformCommand, Mode=OneTime}"
+                Template="{StaticResource EllipseButton}"/>
     </Grid>
 </Window>

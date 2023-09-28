@@ -2,9 +2,9 @@
 
 namespace RESTCountriesClient.Items
 {
-    public sealed class FlagDto
+    public sealed record FlagDto
     {
         [JsonProperty("png")]
-        public string Png { get; set; }
+        public string Png { get; init; }
     }
 }

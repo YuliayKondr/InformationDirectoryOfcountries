@@ -6,10 +6,14 @@ public sealed class CountryViewItem : BaseNotifyPropertyChanged
 {
     private int _id;
     private string? _name;
+    private string? _nameUa;
     private string? _ccn3;
     private string? _flag;
     private string? _capitel;
     private string? _firstLanguage;
+    private string? _currency;
+    private string? _google;
+    private string? _openStreet;
 
     public int Id
     {
@@ -21,6 +25,12 @@ public sealed class CountryViewItem : BaseNotifyPropertyChanged
     {
         get => _name;
         set => SetAndNotifieIfChanged(ref _name, value);
+    }
+
+    public string? NameUa
+    {
+        get => _nameUa;
+        set => SetAndNotifieIfChanged(ref _nameUa, value);
     }
 
     public string? Ccn3
@@ -45,5 +55,23 @@ public sealed class CountryViewItem : BaseNotifyPropertyChanged
     {
         get => _firstLanguage;
         set => SetAndNotifieIfChanged(ref _firstLanguage, value);
+    }
+
+    public string? Currency
+    {
+        get => _currency;
+        set => SetAndNotifieIfChanged(ref _currency, value);
+    }
+
+    public string? GoogleMapUrl
+    {
+        get => _google;
+        set => SetAndNotifieIfChanged(ref _google, value);
+    }
+
+    public string? OpenStreetMapUrl
+    {
+        get => _openStreet;
+        set => SetAndNotifieIfChanged(ref _openStreet, value);
     }
 }

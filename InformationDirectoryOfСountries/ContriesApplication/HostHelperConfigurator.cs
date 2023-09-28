@@ -10,7 +10,6 @@ using ContriesDatabase;
 using InformationDirectoryOfСountries.Arhitecture;
 using InformationDirectoryOfСountries.Models;
 
-
 namespace InformationDirectoryOfСountries.ContriesApplication
 {
     internal static class HostHelperConfigurator

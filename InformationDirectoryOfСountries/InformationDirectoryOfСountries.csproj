@@ -28,4 +28,15 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+    <Folder Include="Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Images\google_map_satellite.png" />
+    <Resource Include="Images\google_map_satellite.png" />
+    <None Remove="Images\osm.svg" />
+  </ItemGroup>
+
 </Project>

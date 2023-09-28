@@ -2,12 +2,12 @@
 
 namespace RESTCountriesClient.Items
 {
-    public sealed class NameDto
+    public sealed record NameDto
     {
         [JsonProperty("common")]
-        public string Common { get; set; }
+        public string Common { get; init; }
 
         [JsonProperty("official")]
-        public string Official { get; set; }
+        public string Official { get; init; }
     }
 }

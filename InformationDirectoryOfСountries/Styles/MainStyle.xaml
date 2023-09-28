@@ -58,4 +58,57 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="TextBoxSearchStyle" TargetType="TextBox">
+        <Style.Resources>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="CornerRadius" Value="2"/>
+            </Style>
+        </Style.Resources>
+        <Setter Property="Padding" Value="5 5 5 0"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="BorderBrush" Value="#246E80"/>
+    </Style>
+
+    <ControlTemplate x:Key="EllipseButton" TargetType="Button">
+        <Border CornerRadius="3"
+                BorderThickness="1"
+                Height="{TemplateBinding Height}"
+                Width="{TemplateBinding Width}"
+                Background="{TemplateBinding Background}">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                              IsEnabled="{TemplateBinding IsEnabled}"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#246E80"/>
+                <Setter Property="BorderBrush" Value="#185867"/>
+                <Setter Property="Foreground" Value="#BEDFE7" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#246E80"/>
+                <Setter Property="BorderBrush" Value="#045062"/>
+                <Setter Property="Foreground" Value="#BEDFE7" />
+            </Trigger>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.200" Storyboard.TargetProperty="FontSize" To="16" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeave">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.200" Storyboard.TargetProperty="FontSize" To="10" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 </ResourceDictionary>

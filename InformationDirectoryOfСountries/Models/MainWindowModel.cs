@@ -5,13 +5,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using AutoMapper;
 using ContriesDatabase;
 using ContriesDatabase.Constants;
 using ContriesDatabase.Models;
 using InformationDirectoryOfСountries.Arhitecture;
+using InformationDirectoryOfСountries.ContriesApplication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Xaml.Behaviors.Core;
 using RESTCountriesClient;
 using RESTCountriesClient.Items;
 
@@ -25,16 +28,17 @@ namespace InformationDirectoryOfСountries.Models
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Country> _countryRepository;
 
+        private ObservableCollection<CountryViewItem> _countriesOrigin;
         private ObservableCollection<CountryViewItem> _countries;
+        private CountryViewItem _selectedCountry;
+        private string _searchText;
 
         public MainWindowModel(
             INavigationService navigationService,
             ICountriesClient countriesClient,
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IRepository<Country> countryRepository,
-            IRepository<Map> addressRepository,
-            IRepository<Language> subscriptionRepository)
+            IRepository<Country> countryRepository)
         {
             _navigationService = navigationService;
             _countriesClient = countriesClient;
@@ -43,6 +47,9 @@ namespace InformationDirectoryOfСountries.Models
             _countryRepository = countryRepository;
 
             LoadCountriesCommand = new AsyncRelayCommand(LoadCountriesAsync);
+            SearchCommand = new RelayCommand(Search);
+            ShowInformCommand = new ActionCommand(ShowInform);
+            ShowMapCommand = new AsyncRelayCommand(ShowMapAsync);
 
             Countries = new ObservableCollection<CountryViewItem>();
         }
@@ -53,7 +60,25 @@ namespace InformationDirectoryOfСountries.Models
             set => SetAndNotifieIfChanged(ref _countries, value);
         }
 
-        public ICommand LoadCountriesCommand { get; set; }
+        public CountryViewItem Country
+        {
+            get => _selectedCountry;
+            set => SetAndNotifieIfChanged(ref _selectedCountry, value);
+        }
+
+        public string SearchText
+        {
+            get => _searchText;
+            set => SetAndNotifieIfChanged(ref _searchText, value);
+        }
+
+        public ICommand LoadCountriesCommand { get; }
+
+        public ICommand SearchCommand { get; }
+
+        public ICommand ShowInformCommand { get; }
+
+        public ICommand ShowMapCommand { get; }
 
         public Task ActivateAsync(object parameter)
         {
@@ -62,11 +87,17 @@ namespace InformationDirectoryOfСountries.Models
 
         private async Task LoadCountriesAsync()
         {
-            Country[] countries = await _countryRepository.Queryable().ToArrayAsync();
+            Country[] countries = await _countryRepository.Queryable()
+                .Include(x => x.Currencies)
+                .Include(x => x.Languages)
+                .Include(x => x.Maps)
+                .ToArrayAsync();
 
             if (countries.Any())
             {
-                Countries = new ObservableCollection<CountryViewItem>(countries.Select(x => _mapper.Map<CountryViewItem>(x)));
+                _countriesOrigin = new ObservableCollection<CountryViewItem>(countries.Select(x => _mapper.Map<CountryViewItem>(x)).OrderBy(x => x.Name));
+
+                Countries = _countriesOrigin;
 
                 return;
             }
@@ -75,7 +106,9 @@ namespace InformationDirectoryOfСountries.Models
 
             await SaveAsync(countryDtos);
 
-            Countries = new ObservableCollection<CountryViewItem>(countryDtos.Select(x => _mapper.Map<CountryViewItem>(x)));
+            _countriesOrigin = new ObservableCollection<CountryViewItem>(countryDtos.Select(x => _mapper.Map<CountryViewItem>(x)).OrderBy(x => x.Name));
+
+            Countries = _countriesOrigin;
         }
 
         private async Task SaveAsync(IReadOnlyCollection<CountryDto> countries)
@@ -90,9 +123,9 @@ namespace InformationDirectoryOfСountries.Models
             await _unitOfWork.SaveChangesAsync(CancellationToken.None);
         }
 
-        private Country MapCountry(CountryDto source)
+        private static Country MapCountry(CountryDto source)
         {
-            string cc3 = source.Ccn3 == null ? "0" : source.Ccn3;
+            string cc3 = string.IsNullOrEmpty(source.Ccn3) ? "0" : source.Ccn3;
 
             Country country = new Country(cc3, source.Name.Official, string.Empty, source.Capital?.FirstOrDefault() ?? string.Empty, source.Flags.Png);
 
@@ -104,7 +137,7 @@ namespace InformationDirectoryOfСountries.Models
             return country;
         }
 
-        private Language[] MapLanguage(Country country, CountryDto sourceDto)
+        private static Language[] MapLanguage(Country country, CountryDto sourceDto)
         {
             if (sourceDto.Languages?.Any() == true)
             {
@@ -114,7 +147,7 @@ namespace InformationDirectoryOfСountries.Models
             return Array.Empty<Language>();
         }
 
-        private Currency[] MapCurrency(Country country, CountryDto sourceDto)
+        private static Currency[] MapCurrency(Country country, CountryDto sourceDto)
         {
             if (sourceDto.Currencies?.Any() == true)
             {
@@ -124,7 +157,7 @@ namespace InformationDirectoryOfСountries.Models
             return Array.Empty<Currency>();
         }
 
-        private Map[] MapMap(Country country, CountryDto sourceDto)
+        private static Map[] MapMap(Country country, CountryDto sourceDto)
         {
             if(sourceDto.Maps?.Any() == true)
             {
@@ -132,6 +165,38 @@ namespace InformationDirectoryOfСountries.Models
             }
 
             return Array.Empty<Map>();
+        }
+
+        private void Search()
+        {
+            if (string.IsNullOrEmpty(SearchText) && _countriesOrigin.Count != Countries.Count)
+            {
+                Countries = _countriesOrigin;
+            }
+
+            if (!string.IsNullOrEmpty(SearchText))
+            {
+                Countries = new ObservableCollection<CountryViewItem>(_countriesOrigin
+                    .Where(x => x.Name?.StartsWith(SearchText) == true || x.NameUa?.StartsWith(SearchText) == true));
+            }
+        }
+
+        private void ShowInform()
+        {
+            var a = Country;
+        }
+
+        private async Task ShowMapAsync()
+        {
+            string selected = Country?.OpenStreetMapUrl ?? string.Empty;
+
+            if (string.IsNullOrEmpty(selected))
+            {
+                MessageBox.Show("Пуста Url");
+                return;
+            }
+
+            ProcessHelper.Start(selected);
         }
     }
 }
