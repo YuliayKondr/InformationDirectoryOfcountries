@@ -30,6 +30,7 @@ public sealed class NavigationService : INavigationService
     public async Task<bool?> ShowDialogAsync(string windowKey, object parameter = null)
     {
         Window window = await GetAndActivateWindowAsync(windowKey, parameter);
+        window.Name = windowKey;
 
         _windowDialog = window;
 
@@ -54,7 +55,7 @@ public sealed class NavigationService : INavigationService
 
     public void CloseOpenedWindowDialog(string window)
     {
-        if (nameof(_windowDialog).Contains(window))
+        if (_windowDialog?.Name == window)
         {
             _windowDialog?.Close();
 
