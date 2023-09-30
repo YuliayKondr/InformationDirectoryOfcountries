@@ -1,10 +1,5 @@
 ﻿using RESTCountriesClient.Items;
 using RestEase;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RESTCountriesClient
 {
@@ -13,5 +8,8 @@ namespace RESTCountriesClient
     {
         [Get("/v3.1/all")]
         Task<Response<CountryDto[]>> GetContriesAsync([Query("fields")] params string[] properties);
+
+        [Get("v3.1/name/{name_country}")]
+        Task<Response<CountryDto[]>> GetCountryByName([Path("name_country")] string name);
     }
 }

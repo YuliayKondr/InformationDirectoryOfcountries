@@ -30,13 +30,16 @@
 
   <ItemGroup>
     <Folder Include="Images\" />
-    <Folder Include="Views\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Images\google_map_satellite.png" />
     <Resource Include="Images\google_map_satellite.png" />
     <None Remove="Images\osm.svg" />
+    <None Remove="Images\open_street.png" />
+    <Resource Include="Images\open_street.png" />
+    <None Remove="Images\pencil.png" />
+    <Resource Include="Images\pencil.png" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,51 @@
+﻿<Window x:Class="InformationDirectoryOfСountries.Views.CountryUpdateView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:InformationDirectoryOfСountries.Views"
+        mc:Ignorable="d"
+        Title="Введіть назву українською" Height="160" Width="400"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/CommonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.8*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Style="{StaticResource HeaderTextBlock}" Text="{Binding NameEn, Mode=OneWay}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="14"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Text="Назва"
+                       Style="{StaticResource HeaderTextBlock}"
+                       VerticalAlignment="Center"/>
+            <TextBox Width="330"
+                     Style="{StaticResource TextBoxStyle}"
+                     Text="{Binding NameUa, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     FontSize="12"
+                     VerticalContentAlignment="Center"
+                     HorizontalContentAlignment="Left"
+                     Margin="0 5 5 5"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Зберегти"
+                    Command="{Binding Path=SaveCommand, Mode=OneTime}"
+                    Style="{StaticResource OkCancelButton}"/>
+            <Button Content="Відміна"
+                    Background="LightGray"
+                    Style="{StaticResource OkCancelButton}"
+                    Click="CloseWindow"/>
+        </StackPanel>
+    </Grid>
+</Window>

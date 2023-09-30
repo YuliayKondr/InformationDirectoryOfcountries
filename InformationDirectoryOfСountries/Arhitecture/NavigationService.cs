@@ -9,6 +9,7 @@ namespace InformationDirectoryOfСountries.Arhitecture;
 public sealed class NavigationService : INavigationService
 {
     private readonly IServiceProvider _serviceProvider;
+    private Window? _windowDialog;
 
     private Dictionary<string, Type> _windows { get; } = new Dictionary<string, Type>();
 
@@ -30,6 +31,8 @@ public sealed class NavigationService : INavigationService
     {
         Window window = await GetAndActivateWindowAsync(windowKey, parameter);
 
+        _windowDialog = window;
+
         return window?.ShowDialog() ?? false;
     }
 
@@ -47,5 +50,15 @@ public sealed class NavigationService : INavigationService
         }
 
         return null;
+    }
+
+    public void CloseOpenedWindowDialog(string window)
+    {
+        if (nameof(_windowDialog).Contains(window))
+        {
+            _windowDialog?.Close();
+
+            _windowDialog = null;
+        }
     }
 }

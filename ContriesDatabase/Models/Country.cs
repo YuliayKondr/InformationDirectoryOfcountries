@@ -50,4 +50,9 @@ public class Country
             Currencies = currencies;
         }
     }
+
+    public void SetNameUa(string nameUa)
+    {
+        NameUa = nameUa;
+    }
 }

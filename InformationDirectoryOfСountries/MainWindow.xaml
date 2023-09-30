@@ -3,16 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:InformationDirectoryOfСountries.Converters"
         xmlns:local="clr-namespace:InformationDirectoryOfСountries"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Країни світу" Height="450" Width="800">
+        Title="Країни світу" Height="450" Width="1100">
     <Window.Resources>
     <ResourceDictionary>
         <ResourceDictionary.MergedDictionaries>
             <ResourceDictionary Source="../Styles/MainStyle.xaml"/>
         </ResourceDictionary.MergedDictionaries>
+        <system:String x:Key="Gogole">googleMaps</system:String>
+        <system:String x:Key="OpenStreet">openStreetMaps</system:String>
     </ResourceDictionary>
     </Window.Resources>
     <i:Interaction.Triggers>
@@ -41,10 +44,24 @@
                   ItemsSource="{Binding Countries, Mode=OneWay}"
                   SelectedItem="{Binding Country, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   AutoGenerateColumns="False"
-                  Style="{StaticResource DataGridMain}">
+                  Style="{StaticResource DataGridMain}"
+                  CanUserAddRows="false">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Им'я" Binding="{Binding Path=Name, Mode=OneWay}" Width="150" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Им'я (укр.)" Binding="{Binding Path=NameUa, Mode=OneWay}" Width="150" IsReadOnly="True"/>
+                <DataGridTemplateColumn Header="Им'я (укр.)" Width="150" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                        Visibility="{Binding NameUa, Mode=OneWay, Converter={converters:StringToVisibilityConverter Collapse=True, Inverse=True}}"
+                                        Style="{StaticResource TransporentButtonButtonStyle}">
+                                     <Image MaxHeight="20" Stretch="Uniform" Source="../Images/pencil.png"></Image>
+                                </Button>
+                                <Label Content="{Binding NameUa}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Сталиця" Binding="{Binding Path=Capital, Mode=OneWay}" Width="150" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Мова(перша)" Binding="{Binding Path=FirstLanguage, Mode=OneWay}" Width="150" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Валюта" Binding="{Binding Path=Currency, Mode=OneWay}" Width="150" IsReadOnly="True"/>
@@ -59,7 +76,9 @@
                 <DataGridTemplateColumn Header="GoogleMap">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Command="{Binding DataContext.ShowMapCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
+                            <Button Command="{Binding DataContext.ShowMapCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                    CommandParameter="{StaticResource Gogole}"
+                                    Style="{StaticResource TransporentButtonButtonStyle}">
                                 <Image MaxHeight="20" Stretch="Uniform" Source="../Images/google_map_satellite.png"></Image>
                             </Button>
                         </DataTemplate>
@@ -68,8 +87,10 @@
                 <DataGridTemplateColumn Header="OpenStreetMaps">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Command="{Binding DataContext.ShowMapCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
-                                <Image MaxHeight="20" Stretch="Uniform" Source="../Images/google_map_satellite.png"></Image>
+                            <Button Command="{Binding DataContext.ShowMapCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                    CommandParameter="{StaticResource OpenStreet}"
+                                    Style="{StaticResource TransporentButtonButtonStyle}">
+                                <Image MaxHeight="20" Stretch="Uniform" Source="../Images/open_street.png"></Image>
                             </Button>
 
                         </DataTemplate>

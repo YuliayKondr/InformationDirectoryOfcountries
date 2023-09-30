@@ -27,6 +27,20 @@ namespace RESTCountriesClient
             return Array.Empty<CountryDto>();
         }
 
+        public async Task<CountryDto?> GetCounryByNameAsync(string name)
+        {
+            Response<CountryDto[]> response = await _api.GetCountryByName(name);
+
+            if (response.ResponseMessage.IsSuccessStatusCode)
+            {
+                CountryDto[] country = response.GetContent();
+
+                return country?.FirstOrDefault();
+            }
+
+            return null;
+        }
+
         private ICountriesApi CreateContriesApi(HttpClient httpClient)
         {
             RestClient apiRestClient = new RestClient(httpClient)

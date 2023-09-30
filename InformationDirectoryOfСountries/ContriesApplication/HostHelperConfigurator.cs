@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ContriesDatabase;
 using InformationDirectoryOfСountries.Arhitecture;
 using InformationDirectoryOfСountries.Models;
+using InformationDirectoryOfСountries.Views;
 
 namespace InformationDirectoryOfСountries.ContriesApplication
 {
@@ -38,13 +39,19 @@ namespace InformationDirectoryOfСountries.ContriesApplication
                 {
                     var navigationService = new NavigationService(x);
                     navigationService.Configure(nameof(MainWindow), typeof(MainWindow));
+                    navigationService.Configure(nameof(CountryUpdateView), typeof(CountryUpdateView));
+                    navigationService.Configure(nameof(CountryView), typeof(CountryView));
 
                     return navigationService;
                 });
 
             services.AddScoped<MainWindowModel>();
+            services.AddScoped<CountryUpdateModel>();
+            services.AddScoped<CountryModel>();
 
             services.AddTransient(sp => new MainWindow() { DataContext = sp.GetRequiredService<MainWindowModel>() });
+            services.AddTransient(sp => new CountryUpdateView() { DataContext = sp.GetRequiredService<CountryUpdateModel>() });
+            services.AddTransient(sp => new CountryView() { DataContext = sp.GetRequiredService<CountryModel>() });
             return services;
         }
     }

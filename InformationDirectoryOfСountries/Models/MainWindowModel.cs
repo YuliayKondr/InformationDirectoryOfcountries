@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using AutoMapper;
+using CommunityToolkit.Mvvm.Messaging;
 using ContriesDatabase;
 using ContriesDatabase.Constants;
 using ContriesDatabase.Models;
 using InformationDirectoryOfСountries.Arhitecture;
 using InformationDirectoryOfСountries.ContriesApplication;
+using InformationDirectoryOfСountries.Views;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Xaml.Behaviors.Core;
 using RESTCountriesClient;
 using RESTCountriesClient.Items;
 
@@ -30,7 +31,7 @@ namespace InformationDirectoryOfСountries.Models
 
         private ObservableCollection<CountryViewItem> _countriesOrigin;
         private ObservableCollection<CountryViewItem> _countries;
-        private CountryViewItem _selectedCountry;
+        private CountryViewItem? _selectedCountry;
         private string _searchText;
 
         public MainWindowModel(
@@ -48,10 +49,13 @@ namespace InformationDirectoryOfСountries.Models
 
             LoadCountriesCommand = new AsyncRelayCommand(LoadCountriesAsync);
             SearchCommand = new RelayCommand(Search);
-            ShowInformCommand = new ActionCommand(ShowInform);
-            ShowMapCommand = new AsyncRelayCommand(ShowMapAsync);
+            ShowInformCommand = new AsyncRelayCommand(ShowInform);
+            ShowMapCommand = new RelayCommand<string>(ShowMapAsync);
+            UpdateCommand = new AsyncRelayCommand(UpdateAsync);
 
             Countries = new ObservableCollection<CountryViewItem>();
+
+            WeakReferenceMessenger.Default.Register<UpdateCountryMessage>(this, UpdateCountry);
         }
 
         public ObservableCollection<CountryViewItem> Countries
@@ -60,7 +64,7 @@ namespace InformationDirectoryOfСountries.Models
             set => SetAndNotifieIfChanged(ref _countries, value);
         }
 
-        public CountryViewItem Country
+        public CountryViewItem? Country
         {
             get => _selectedCountry;
             set => SetAndNotifieIfChanged(ref _selectedCountry, value);
@@ -79,6 +83,8 @@ namespace InformationDirectoryOfСountries.Models
         public ICommand ShowInformCommand { get; }
 
         public ICommand ShowMapCommand { get; }
+
+        public ICommand UpdateCommand { get; }
 
         public Task ActivateAsync(object parameter)
         {
@@ -102,7 +108,7 @@ namespace InformationDirectoryOfСountries.Models
                 return;
             }
 
-            IReadOnlyCollection<CountryDto> countryDtos = await _countriesClient!.GetCounriesAsync();
+            IReadOnlyCollection<CountryDto> countryDtos = await _countriesClient.GetCounriesAsync();
 
             await SaveAsync(countryDtos);
 
@@ -127,7 +133,7 @@ namespace InformationDirectoryOfСountries.Models
         {
             string cc3 = string.IsNullOrEmpty(source.Ccn3) ? "0" : source.Ccn3;
 
-            Country country = new Country(cc3, source.Name.Official, string.Empty, source.Capital?.FirstOrDefault() ?? string.Empty, source.Flags.Png);
+            Country country = new Country(cc3, source.Name.Official, string.Empty, source.Capital.FirstOrDefault() ?? string.Empty, source.Flags.Png);
 
             country.SetCollections(
                 MapLanguage(country, source),
@@ -181,14 +187,64 @@ namespace InformationDirectoryOfСountries.Models
             }
         }
 
-        private void ShowInform()
+        private async Task ShowInform()
         {
-            var a = Country;
+            if (Country == null)
+            {
+                MessageBox.Show("Оберіть країну");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(Country.Name))
+            {
+                MessageBox.Show("У країни не заповнено ім'я");
+                return;
+            }
+
+            CountryDto? countryDto = await _countriesClient.GetCounryByNameAsync(Country.Name);
+
+            if (countryDto == null)
+            {
+                MessageBox.Show("Віддалений сервер нічого не знайшов цієї країни");
+                return;
+            }
+
+            CountryParameter countryParameter = new CountryParameter(
+                countryDto.Name.Common,
+                countryDto.Region,
+                countryDto.Area,
+                countryDto.Population,
+                countryDto.Flags?.Png ?? string.Empty,
+                countryDto.CoatOfArms?.Png ?? string.Empty);
+
+            await _navigationService.ShowDialogAsync(nameof(CountryView), countryParameter);
         }
 
-        private async Task ShowMapAsync()
+        private async Task UpdateAsync()
         {
-            string selected = Country?.OpenStreetMapUrl ?? string.Empty;
+            if (Country != null)
+            {
+                await _navigationService.ShowDialogAsync(nameof(CountryUpdateView), new CountryParameter(Country.Id));
+            }
+            else
+            {
+                MessageBox.Show("Не вибраний об'єкт", "Помилка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void ShowMapAsync(string? mapType)
+        {
+            string selected = string.Empty;
+
+            if (mapType == MapTypeConstant.OpenStreetMaps)
+            {
+                selected = Country?.OpenStreetMapUrl ?? string.Empty;
+            }
+
+            if (mapType == MapTypeConstant.GoogleMaps)
+            {
+                selected = Country?.GoogleMapUrl ?? string.Empty;
+            }
 
             if (string.IsNullOrEmpty(selected))
             {
@@ -197,6 +253,13 @@ namespace InformationDirectoryOfСountries.Models
             }
 
             ProcessHelper.Start(selected);
+        }
+
+        private void UpdateCountry(object o, UpdateCountryMessage message)
+        {
+            CountryViewItem item = Countries.First(x => x.Id == message.Value.Id);
+
+            item.NameUa = message.Value.NameUa;
         }
     }
 }
